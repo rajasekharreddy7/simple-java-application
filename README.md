@@ -30,7 +30,7 @@ The JAR file will be created in the `target/` directory as `krishna-devops-train
 
 ## Deploying the JAR
 
-To run the JAR file:
+To run the JAR file:::
 
 ```bash
 java -jar target/krishna-devops-training-0.0.1-SNAPSHOT.jar
