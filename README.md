@@ -7,7 +7,7 @@ This is a Spring Boot web application that displays "Krishna Devops Training" on
 - Java 17 or higher
 - Maven 3.6+
 
-## Running the Application
+## Running the Application in
 
 1. Clone or navigate to the project directory.
 2. Run the application using Maven:
