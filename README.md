@@ -1,4 +1,4 @@
-# Krishna Devops Training raj
+# Krishna Devops Training
 
 This is a Spring Boot web application that displays "Krishna Devops Training" on the main page with navigation to About and Contact pages.
 
