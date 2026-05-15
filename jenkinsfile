@@ -11,10 +11,6 @@ pipeline {
                 sh 'mvn clean install package'
             }
         }
-        stage('Test'){
-            steps {
-                sh 'mvn test'
-            }
         }
         stage('Sonar Analysis') {
             steps {
@@ -28,10 +24,25 @@ pipeline {
                         -Dsonar.java.binaries=target/classes
                     """
             }
+            }    }    }
+        stage('Upload Artifact') {
+            steps {
+                withCredentials([
+                usernamePassword(
+                credentialsId: 'jfrog-creds',
+                usernameVariable: 'admin',
+                passwordVariable: 'Jfrog@89')]) 
+                {
+                    sh '''
+                    curl -u $USERNAME:$PASSWORD \
+                    -T target/*.jar \
+                    "$ART_URL/petclinic.jar"
+                    '''
+        }    }    }
+       stage('Test'){
+            steps {
+                sh 'mvn test'
             }
-            }   
-            }
-
         stage('Deploy') {
             steps {
                 sh'''
