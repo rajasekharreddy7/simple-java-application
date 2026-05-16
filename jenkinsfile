@@ -16,26 +16,25 @@ pipeline {
             sh 'mvn test'
         }
         }
-    stage('Upload to JFrog') {
-        steps {
-            withCredentials([usernamePassword(
-                credentialsId: 'jfrog',
-                usernameVariable: 'admin',
-                passwordVariable: 'Jfrog@89')]) {
-            script {
-                def jarFile = sh(script: "ls target/*.jar | head -1", returnStdout: true).trim()
-                def jarName = jarFile.tokenize('/').last()
-                echo "JAR file found: ${jarFile}"
-                echo "Uploading as: ${jarName}"
-                sh '''
-                    curl -u ${JFROG_USER}:${JFROG_PASSWORD} \
-                         -X PUT \
-                         -T ${jarFile} \
-                         "https://http://18.60.45.252:8082//artifactory/firstone/simple-java-application/${BUILD_NUMBER}/${jarName}"
-                '''
-            }
-        }
-    }
+    stage('Upload Artifact') {
+
+steps {
+
+withCredentials([
+usernamePassword(
+credentialsId: 'jfrog',
+usernameVariable: 'admin',
+passwordVariable: 'Jfrog@89'
+)
+]) {
+
+sh '''
+curl -u $USERNAME:$PASSWORD \
+-T target/*.jar \
+"$ART_URL/petclinic.jar"
+'''
+}
+}
 }
         stage('Deploy') {
             steps {
