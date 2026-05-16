@@ -16,26 +16,38 @@ pipeline {
             sh 'mvn test'
         }
         }
-    stage('Upload Artifact') {
-
-steps {
-
-withCredentials([
-usernamePassword(
-credentialsId: 'jfrog',
-usernameVariable: 'admin',
-passwordVariable: 'Jfrog@89'
-)
-]) {
-
-sh '''
-curl -u $USERNAME:$PASSWORD \
--T target/*.jar \
-"$ART_URL/petclinic.jar"
-'''
-}
-}
-}
+            stage('Sonar Analysis') {
+                steps {
+                    script {
+                        def scannerHome = tool 'sonarqube'
+                        withSonarQubeEnv('sonarqube') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=simple-java-application \
+                            -Dsonar.sources=. \
+                            -Dsonar.java.binaries=target/classes
+                        """
+                    }
+                }
+            }
+        }
+            stage('Upload Artifact') {
+                steps {
+                    withCredentials([
+                    usernamePassword(
+                    credentialsId: 'jfrog',
+                    usernameVariable: 'admin',
+                    passwordVariable: 'Jfrog@89'
+                    )
+                    ]) {
+                    sh '''
+                        curl -u $USERNAME:$PASSWORD \
+                        -T target/*.jar \
+                        "$ART_URL/petclinic.jar"
+                    '''
+                    }
+                    }
+                    }
         stage('Deploy') {
             steps {
                 sh '''
