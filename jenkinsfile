@@ -11,22 +11,7 @@ pipeline {
                 sh 'mvn clean install package'
             }
         }
-        stage('Sonar Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonarqube'
-                    withSonarQubeEnv('sonarqube') {
-                        sh """
-                            ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=simple-java-application \
-                            -Dsonar.sources=. \
-                            -Dsonar.java.binaries=target/classes
-                        """
-                    }
-                }
-            }
-        }
-        stage('Test'){
+              stage('Test'){
             steps{
             sh 'mvn test'
         }
