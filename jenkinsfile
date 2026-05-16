@@ -31,21 +31,6 @@ pipeline {
             sh 'mvn test'
         }
         }
-        stage('Upload Artifact') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'jfrog-creds', 
-                    usernameVariable: 'USER', 
-                    passwordVariable: 'PASS'
-                )]) {
-                    sh '''
-                        curl -u $USER:$PASS \
-                        -T target/*.jar \
-                        "$ART_URL/petclinic.jar"
-                    '''
-                }
-            }
-        }
         stage('Deploy') {
             steps {
                 sh '''
