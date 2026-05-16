@@ -25,12 +25,14 @@ pipeline {
             script {
                 def jarFile = sh(script: "ls target/*.jar | head -1", returnStdout: true).trim()
                 def jarName = jarFile.tokenize('/').last()
-                sh """
+                echo "JAR file found: ${jarFile}"
+                echo "Uploading as: ${jarName}"
+                sh '''
                     curl -u ${JFROG_USER}:${JFROG_PASSWORD} \
                          -X PUT \
                          -T ${jarFile} \
                          "https://http://18.60.45.252:8082//artifactory/firstone/simple-java-application/${BUILD_NUMBER}/${jarName}"
-                """
+                '''
             }
         }
     }
